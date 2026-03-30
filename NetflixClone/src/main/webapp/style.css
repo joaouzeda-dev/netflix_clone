@@ -1,0 +1,577 @@
+/* Variáveis e Estilo Base (adicionadas variáveis para facilitar responsividade) */
+:root {
+	--bg: #141414;
+	--text: #FFFFFF;
+	--muted: #e5e5e5;
+	--accent: #e50914;
+	--avatar-border: rgba(255, 255, 255, 0.06);
+	--gap-min: 1rem;
+	--gap-max: 5vw;
+	--radius: 10px;
+	--shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+	--transition: 0.25s ease-in-out;
+	--max-content-width: 1200px;
+}
+
+/* Reset e Estilo Base */
+body {
+	background-color: var(--bg);
+	color: var(--text);
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	/* trocar layout flex por bloco para evitar centralização vertical que impede reflow em mobile */
+	display: block;
+	/* alinhar topo e permitir que containers controlem centering */
+	min-height: 100vh;
+	margin: 0;
+}
+
+/* Troque .site-header por .contudo-principal */
+.contudo-principal {
+	text-align: center;
+	padding: 2rem 0;
+	width: 100%; /* Garante que ocupe a largura toda */
+}
+
+.contudo-principal h1 {
+	font-size: clamp(1.6rem, 3.5vw, 3.5rem);
+	font-weight: 500;
+	margin-bottom: 30px;
+	letter-spacing: 1px;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	color: white; /* Garante a cor branca */
+}
+
+/* garantir que o main ocupe largura total e permita responsividade do grid */
+main {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.site-header h1 {
+	/* tipografia fluida: mínimo, ideal e máximo */
+	font-size: clamp(1.6rem, 3.5vw, 3.5rem);
+	font-weight: 500;
+	margin-bottom: 30px;
+	letter-spacing: 1px;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Garantir largura total do documento e box-sizing consistente */
+html, body {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+*, *::before, *::after {
+	box-sizing: inherit;
+}
+
+/* Grelha de Perfis - configuração base simplificada (evita conflito com overrides seguintes) */
+.profiles {
+	list-style: none;
+	padding: 0;
+	margin: 0 auto;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* profile-button base simplificado - limites via max-width controlados depois */
+.profile-button {
+	background: transparent;
+	border: none;
+	color: inherit;
+	padding: 0;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	outline: none;
+	transition: transform var(--transition), box-shadow var(--transition);
+	-webkit-tap-highlight-color: transparent;
+	/* melhorar toque em mobile */
+}
+
+.profile-button:focus-visible {
+	outline: 3px solid rgba(229, 9, 20, 0.15);
+	border-radius: 8px;
+}
+
+figure {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Imagens dos Avatares - tamanho fluido com clamp */
+.avatar {
+	width: clamp(80px, 18vw, 180px);
+	height: clamp(80px, 18vw, 180px);
+	border-radius: var(--radius);
+	border: 3px solid transparent;
+	transition: transform var(--transition), border-color var(--transition);
+	object-fit: cover;
+}
+
+/* Forçar imagens a nunca excederem a largura do seu container */
+.avatar {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Legendas dos Perfis */
+.caption {
+	color: var(--text);
+	font-size: clamp(0.9rem, 1.3vw, 1.3rem);
+	margin-top: clamp(8px, 2vh, 18px);
+	transition: color var(--transition);
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+/* Interação de Hover (Mouse por cima) - respeita preferências de movimento */
+@media ( hover : hover) and (pointer: fine) {
+	.profile-button:hover .avatar {
+		transform: scale(1.1);
+	}
+	.profile-button:hover .caption {
+		color: var(--muted);
+	}
+}
+
+/* Toque: feedback visual mais suave */
+.profile-button:active {
+	transform: translateY(1px) scale(0.995);
+}
+
+/* Reduz movimento se o usuário pediu */
+@media ( prefers-reduced-motion : reduce) {
+	.profile-button, .avatar, .manage-button {
+		transition: none !important;
+	}
+}
+
+/* Botão de Editar Perfis */
+.manage-container {
+	display: flex;
+	justify-content: center;
+	margin-top: clamp(2rem, 8vh, 16rem);
+}
+
+.manage-button {
+	background: #000; /* alterado de var(--accent) para preto */
+	color: #fff;
+	padding: .6rem 1rem;
+	border-radius: 8px;
+	border: 0;
+	font-weight: 700;
+	font-size: clamp(14px, 2.2vw, 24px);
+	cursor: pointer;
+	box-shadow: var(--shadow);
+	transition: transform var(--transition), opacity var(--transition);
+	/* leve contorno para separar do fundo escuro */
+	outline: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.manage-button:hover {
+	transform: translateY(-2px);
+	opacity: 0.98;
+}
+
+/* Container que envolve a grade de perfis (ajusta padding e largura) */
+.profiles-grid {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 2rem 1rem;
+	box-sizing: border-box;
+}
+
+/* Cada item da lista deve centralizar seu conteúdo e permitir que o botão cresça/encolha */
+.profile {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: auto;
+}
+
+/* Permitimos que o botão ocupe 100% do grid/célula, controlando a largura máxima */
+.profile-button {
+	max-width: 220px;
+	/* limite superior, ainda responsivo via clamp no avatar */
+}
+
+/* Tornar avatar verdadeiramente responsivo: usa aspect-ratio para manter forma quadrada
+   width 100% dentro do botão/célula, mas limite máximo via max-width */
+.profile-button .avatar {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1/1;
+	max-width: clamp(80px, 18vw, 180px);
+	border-radius: var(--radius);
+	position: relative !important;
+	/* Necessário para o z-index funcionar */
+	z-index: 10 !important;
+	/* Faz a imagem ficar na "frente" de tudo ao crescer */
+}
+
+/* Mudar para Grid em tamanhos médios/maiores: auto-fit com minmax garante que o número
+   de colunas se adapte ao tamanho da tela (força quebra e redistribuição adequada). */
+@media ( min-width : 600px) {
+	.profiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+		gap: clamp(0.75rem, 3.5vw, 5vw);
+		align-items: start;
+		justify-items: center;
+	}
+	.profile-button {
+		width: 100%;
+		max-width: 180px;
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+}
+
+/* Ajuste adicional para telas bem grandes: aumentar coluna mínima */
+@media ( min-width : 1100px) {
+	.profiles {
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+}
+
+/* Reforço para telas muito pequenas: garantir que botões ocupem linha inteira quando necessário */
+@media ( max-width : 420px) {
+	.profiles {
+		display: flex;
+		/* fallback para flex wrap quando grid resulta em células muito pequenas */
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	.profile-button {
+		width: 100%;
+		max-width: 320px;
+		margin: 0.35rem 0;
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+}
+
+/* Responsividade por breakpoints para afinar layouts */
+@media ( max-width : 1024px) {
+	.profiles {
+		gap: clamp(0.75rem, 4vw, 4vw);
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+	.site-header h1 {
+		margin-bottom: 20px;
+	}
+}
+
+@media ( max-width : 768px) {
+	.avatar {
+		width: clamp(80px, 22vw, 120px);
+		height: clamp(80px, 22vw, 120px);
+	}
+	.site-header h1 {
+		font-size: clamp(1.6rem, 5vw, 2.2rem);
+	}
+	.caption {
+		font-size: clamp(12px, 2.5vw, 14px);
+	}
+	.profiles {
+		gap: 1rem;
+		padding: 1rem;
+	}
+}
+
+@media ( max-width : 480px) {
+	/* Empilhar verticalmente se a tela for estreita demais */
+	.profiles {
+		gap: 0.75rem;
+	}
+	.profile-button {
+		width: 45%;
+		margin: 0.25rem;
+	}
+
+	/* Para telas muito pequenas, permitir que cada profile ocupe linha inteira */
+	.profile-button.full-width {
+		width: 100%;
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+	.manage-container {
+		margin-top: 3rem;
+		padding: 0 1rem;
+	}
+}
+
+/* FORÇAR comportamento responsivo em dispositivos pequenos
+   (alta especificidade e !important para evitar overrides externos) */
+@media ( max-width : 600px) {
+	.profiles-grid, main {
+		width: 100% !important;
+		max-width: 100% !important;
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+		margin: 0 auto !important;
+		box-sizing: border-box !important;
+	}
+	.profiles {
+		display: grid !important;
+		grid-template-columns: repeat(2, minmax(100px, 1fr)) !important;
+		gap: 0.9rem !important;
+		width: 100% !important;
+	}
+	.profile-button {
+		max-width: 160px !important;
+		width: 100% !important;
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+}
+
+@media ( max-width : 380px) {
+	.profiles {
+		grid-template-columns: 1fr !important;
+		gap: 0.6rem !important;
+	}
+	.profile-button {
+		max-width: 100% !important;
+		width: 100% !important;
+	}
+	.profile-button:active .avatar {
+		transform: scale(1.15) !important;
+		/* Aumenta o avatar em 15% ao tocar */
+		border-color: var(--text) !important;
+		/* Opcional: destaca a borda no toque */
+	}
+}
+
+/* Overrides finais para garantir comportamento responsivo por device */
+/* Faz a grade usar Grid por padrão com auto-fit/minmax; isso garante que o número
+   de colunas se adapte dinamicamente à largura do container/device. */
+.profiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	gap: clamp(0.6rem, 3.5vw, 4vw);
+	justify-items: center;
+	align-items: start;
+	padding: 0 1rem;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: var(--max-content-width);
+	margin: 0 auto;
+}
+
+/* As células da lista ocupam 100% do espaço da coluna criada pelo grid */
+.profile {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+/* Garantir que o botão ocupe toda a célula e mantenha um max-width */
+.profile-button {
+	width: 100%;
+	max-width: clamp(110px, 18vw, 200px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0.2rem;
+	box-sizing: border-box;
+}
+
+/* Avatar escala para 100% do botão, mantendo proporção quadrada */
+.profile-button .avatar {
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	aspect-ratio: 1/1;
+	object-fit: cover;
+	border-radius: var(--radius);
+}
+
+/* Breakpoint: pequenas telas telefônicas (ex.: 360-420px) */
+@media ( max-width : 600px) {
+	.profiles {
+		grid-template-columns: repeat(2, minmax(100px, 1fr));
+		gap: 1rem;
+	}
+	.profile-button {
+		max-width: 160px;
+	}
+}
+
+/* Breakpoint: muito pequenas (smartphones estreitos) */
+@media ( max-width : 380px) {
+	.profiles {
+		grid-template-columns: 1fr;
+	}
+	.profile-button {
+		max-width: 320px;
+		margin: 0.35rem 0;
+	}
+}
+
+/* Se preferir que os nomes tenham quebras em telas pequenas, remova o white-space: nowrap; */
+@media ( max-width : 420px) {
+	.caption {
+		white-space: normal;
+		font-size: clamp(12px, 3.5vw, 14px);
+	}
+}
+
+/* Pequenas melhorias de acessibilidade e foco */
+.profile-button[aria-pressed="true"] .avatar {
+	box-shadow: 0 0 0 4px rgb(0, 0, 0);
+}
+
+/* Regras dirigidas por classe aplicada via JS para forçar comportamento responsivo
+   em ambientes onde media queries parecem não estar sendo aplicadas. */
+body.device-desktop .profiles {
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+	gap: clamp(0.6rem, 3.5vw, 4vw) !important;
+}
+
+body.device-tablet .profiles {
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+	gap: 1rem !important;
+}
+
+body.device-small .profiles {
+	grid-template-columns: repeat(2, minmax(100px, 1fr)) !important;
+	gap: 0.9rem !important;
+}
+
+body.device-phone .profiles {
+	grid-template-columns: 1fr !important;
+	gap: 0.6rem !important;
+}
+
+/* Também ajustar tamanho do avatar para cada classe */
+body.device-phone .profile-button .avatar, body.device-small .profile-button .avatar
+	{
+	max-width: 160px !important;
+}
+
+body.device-desktop .profile-button .avatar {
+	max-width: 200px !important;
+}
+
+/* End of device-class overrides */
+
+/* Override final: forçar 2 colunas (2 perfis por linha) e até 2 linhas (para 4 perfis)
+   Este bloco garante exatamente duas colunas em todos os devices conforme solicitado. */
+/* Desktop / large screens: single horizontal row (no wrap) */
+.profiles {
+	display: flex !important;
+	flex-wrap: nowrap !important;
+	align-items: flex-start !important;
+	justify-content: center !important;
+	gap: 1rem !important;
+	padding: 2rem 0.5rem !important;
+	max-width: var(--max-content-width) !important;
+	margin-top: 10vh !important;
+	/* Aumente o 10vh para descer mais (ex: 15vh ou 150px) */
+	overflow-x: visible !important;
+	/* permite scroll horizontal se houver muitos perfis */
+}
+
+.profile {
+	flex: 0 0 auto !important; /* não encolher, manter tamanho natural */
+	width: auto !important;
+}
+
+.profile-button {
+	width: auto !important;
+	max-width: 220px !important;
+	display: inline-flex !important;
+}
+
+.profile-button .avatar {
+	width: 100% !important;
+	max-width: 180px !important;
+	height: auto !important;
+	aspect-ratio: 1/1 !important;
+	position: relative !important;
+	z-index: 10 !important;
+	transition: transform 0.2s ease-in-out !important;
+}
+
+.profile-button:active .avatar {
+	transform: scale(1.1) !important;
+	z-index: 99 !important;
+}
+
+/* Mobile: forçar 2 colunas (2 perfis por linha), resultando em 2 linhas para 4 perfis */
+@media ( max-width : 600px) {
+	.profiles {
+		display: grid !important;
+		grid-template-columns: repeat(2, minmax(100px, 1fr)) !important;
+		gap: 0.9rem !important;
+		width: 100% !important;
+		max-width: 720px !important;
+		padding: 0 0.5rem !important;
+		margin: 0 auto !important;
+		overflow: visible !important;
+	}
+	.profile {
+		width: 100% !important;
+	}
+	.profile-button {
+		width: 100% !important;
+		max-width: none !important;
+		display: flex !important;
+		justify-content: center !important;
+		align-items: center !important;
+	}
+	.profile-button .avatar {
+		width: 100% !important;
+		max-width: 100% !important;
+		height: auto !important;
+		aspect-ratio: 1/1 !important;
+	}
+}
+
+/* Very small phones: keep two columns but adjust caption wrapping */
+@media ( max-width : 380px) {
+	.caption {
+		white-space: normal !important;
+		font-size: clamp(12px, 3.5vw, 14px);
+	}
+}
